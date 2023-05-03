@@ -35,7 +35,7 @@ void loop() {
   duracion = pulseIn(ECHO, HIGH);
   distancia = duracion / 59;
   Serial.println(distancia);
-  if (distancia <= 20) { // Si la distancia es menor o igual a 35 cm
+  if (distancia <= 45) { // Si la distancia es menor o igual a 45 cm
   for (int i = 0; i < tiraCount; i++) {
     tira.setPixelColor(i, tira.Color(255, 218, 185));
     tira.show();
@@ -46,10 +46,10 @@ void loop() {
     servo03.write(135);
   }} 
   else {
-    tira.clear(); // Si la distancia es mayor que 20 cm, apaga la tira
+    tira.clear(); // Si la distancia es mayor que 45 cm, apaga la tira
     tira.show();
 
-    // Detiene los servomotores
+    // Los servomotores vuelven a su posición inicial
     servo01.write(0);
     servo02.write(0);
     servo03.write(0);

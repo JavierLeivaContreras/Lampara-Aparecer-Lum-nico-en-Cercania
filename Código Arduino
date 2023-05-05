@@ -3,9 +3,9 @@
 
 #define TRIG 4
 #define ECHO 5
-const int tiraCount = 50;
+const int tiraCount = 57;
 
-Adafruit_NeoPixel tira = Adafruit_NeoPixel(50, 2, NEO_GRB + NEO_KHZ800); // La tira tiene 50 neopixeles
+Adafruit_NeoPixel tira = Adafruit_NeoPixel(57, 2, NEO_GRB + NEO_KHZ800); // La tira tiene 50 neopixeles
 
 long duracion, distancia;
 
@@ -21,19 +21,21 @@ void setup() {
   pinMode(ECHO, INPUT);
   Serial.begin(9600);
 
-  servo01.attach(12); // El servo01 está conectado al pin 8
+  servo01.attach(8); // El servo01 está conectado al pin 8
   servo02.attach(9); // El servo02 está conectado al pin 9
-  servo03.attach(8); // El servo03 está conectado al pin 10
+  servo03.attach(10); // El servo03 está conectado al pin 10
 }
 
 void loop() {
   digitalWrite(TRIG, LOW);
+  delayMicroseconds(2); // Pequeño retardo antes del pulso de trigger
   digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10); // Duración mínima del pulso de trigger
   digitalWrite(TRIG, LOW);
   duracion = pulseIn(ECHO, HIGH);
-  distancia = duracion *0.034 / 2;
+  distancia = duracion /59;
   Serial.println(distancia);
-  if (distancia <= 45) { // Si la distancia es menor o igual a 45 cm
+  if (distancia >= 10 && distancia <= 45) { // Si la distancia está entre 10 y 45 cm
   for (int i = 0; i < tiraCount; i++) {
     tira.setPixelColor(i, tira.Color(255, 218, 185));
     tira.show();
@@ -44,7 +46,7 @@ void loop() {
     servo03.write(135);
   }} 
   else {
-    tira.clear(); // Si la distancia es mayor que 45 cm, apaga la tira
+    tira.clear(); // Si la distancia está fuera del rango, apaga la tira
     tira.show();
 
     // Los servomotores vuelven a su posición inicial
